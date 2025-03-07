@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "37f12638-73cd-49a0-b140-e63569c30093",
+		"name": "Team5_API_Warriors_LMS_Hackathon_March2025",
+		"schema": "https://schema.postman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9e2f4401-7468-44d8-8cda-797663428be0",
+								"exec": [
+									"//if(pm.variables.get(\"statusCode\")===201){",
+									"    var jsonData = pm.response.json();",
+									"pm.environment.set(\"authToken\",jsonData.token);",
+									"//}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "a1be15e6-7bf1-466d-9172-481e42ee8791",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userLoginEmailId\": \"{{userLoginEmail}}\",\n  \"password\": \"{{userLoginPassword}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}/login"
+					},
+					"response": []
+				}
+			],
+			"id": "2c715e9c-6589-4a5f-a18f-987d00f58deb"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{authToken}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "3ac28afc-c81f-4733-9752-d4ea2a3a6adb",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6d78e209-63d1-4c36-a34b-a5bbfba49017",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
