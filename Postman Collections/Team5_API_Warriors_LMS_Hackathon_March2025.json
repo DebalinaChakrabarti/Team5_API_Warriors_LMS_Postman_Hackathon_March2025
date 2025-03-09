@@ -63,10 +63,35 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "3ac28afc-c81f-4733-9752-d4ea2a3a6adb",
+				"id": "bae39d8b-8afb-4193-989e-d2745b4e7150",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
+					"if (typeof pm.variables.get('requestdata') !== 'object') {",
+					"    pm.variables.set('requestdata', pm.iterationData.toObject());",
+					"}",
+					"const requestdata = pm.variables.get('requestdata');",
+					"",
+					"if(typeof requestdata !== 'object' || Object.keys(requestdata).length ===0) {",
+					"    console.log(\"No external file found\")",
+					"    return;",
+					"}",
+					"",
+					"const currentrequest = requestdata.requests.filter(({name}) => name === pm.info.requestName) [0];",
+					"if(!currentrequest){",
+					"    console.log(`Request ${pm.info.requestName} has no data defined.`);",
+					"}",
+					"",
+					"const variables = currentrequest.data.shift();",
+					"",
+					"Object.entries(variables).forEach(([key, value]) => {",
+					"        pm.variables.set(key, value);",
+					"    });",
+					"",
+					"pm.variables.set('requestdata',requestdata);",
+					"if(currentrequest.data.length > 0){",
+					"    pm.execution.setNextRequest(pm.info.requestName)",
+					"}",
 					""
 				]
 			}
@@ -74,7 +99,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "6d78e209-63d1-4c36-a34b-a5bbfba49017",
+				"id": "ae07e962-0dc0-4640-84b0-93113e0d6313",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
