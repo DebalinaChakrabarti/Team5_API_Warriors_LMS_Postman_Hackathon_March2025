@@ -63,10 +63,11 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "bae39d8b-8afb-4193-989e-d2745b4e7150",
+				"id": "43bedbb5-1d69-4087-a78c-8d3eb1da00f4",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
+					"//--------------Fetch Data from External JSON Data file-----------------",
 					"if (typeof pm.variables.get('requestdata') !== 'object') {",
 					"    pm.variables.set('requestdata', pm.iterationData.toObject());",
 					"}",
@@ -92,6 +93,37 @@
 					"if(currentrequest.data.length > 0){",
 					"    pm.execution.setNextRequest(pm.info.requestName)",
 					"}",
+					"",
+					"//  pm.variables.set('requestdata',requestdata);",
+					"// if(currentrequest.data.length > 0){",
+					"//     postman.setNextRequest(pm.info.requestName)",
+					"// }",
+					"",
+					"//------------------ Authorization Set Up-----------------",
+					"pm.request.headers.clear(); // Clear all headers to prevent residual values",
+					"var AuthType = pm.variables.get(\"authType\");",
+					"switch (AuthType) {",
+					"    case \"No Auth\":",
+					"        pm.request.auth = { type: 'noauth' };",
+					"        break;",
+					"    case \"Bearer Token\":",
+					"        const authToken = pm.environment.get(\"AuthToken\");",
+					"        if (authToken) {",
+					"            pm.request.headers.add({ key: \"Authorization\", value: `Bearer ${authToken}` });}",
+					"         else {console.log(\"AuthToken is not set in the environment.\");}",
+					"        break;",
+					"    case \"Invalid Bearer token\":",
+					"        pm.request.headers.add({ key: \"Authorization\", value: \"invalid\" });",
+					"         console.log(\"Using invalid bearer token.\");",
+					"        break;",
+					"    default:",
+					"        console.log(\"Unknown authType: \" + AuthType); break;",
+					"}",
+					"",
+					"//-------------- Set the Request Method Dynamically---------------",
+					" if (variables.method) {",
+					"    pm.request.method = variables.method;",
+					" }",
 					""
 				]
 			}
@@ -99,7 +131,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "ae07e962-0dc0-4640-84b0-93113e0d6313",
+				"id": "e6b07c0d-a863-44f7-bb2e-006880c3a76f",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
