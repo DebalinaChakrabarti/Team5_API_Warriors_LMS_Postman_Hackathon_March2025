@@ -1592,6 +1592,19 @@
 						"url": "{{baseURL}}{{Endpoint}}"
 					},
 					"response": []
+				},
+				{
+					"name": "Gets User by Program Batches",
+					"id": "06c9b3b2-0c99-4a7b-aa0f-bf50f188b2a3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
 				}
 			],
 			"id": "c1e52cf1-8807-4bd5-ac1a-c1b7c93db25a",
