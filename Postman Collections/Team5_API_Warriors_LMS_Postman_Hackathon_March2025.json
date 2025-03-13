@@ -1412,6 +1412,48 @@
 					"response": []
 				},
 				{
+					"name": "Gets count of active and inactive users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "198747ea-c519-4863-ac8e-94c6aceb54ed",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "3db3761f-0b0f-44ec-b5e4-b09ffe7b4dc1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
 					"name": "CreateUser",
 					"event": [
 						{
