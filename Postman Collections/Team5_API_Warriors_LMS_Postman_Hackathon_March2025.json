@@ -1260,8 +1260,12 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"packages": {},
-								"type": "text/javascript"
+								"id": "c31bdb29-ea85-41fe-8135-ef8aa44d76b6",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -1596,6 +1600,19 @@
 				{
 					"name": "Gets User by Program Batches",
 					"id": "06c9b3b2-0c99-4a7b-aa0f-bf50f188b2a3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Gets Users for Program",
+					"id": "d3d7fdb1-51b9-4201-b14f-a6d65338e9fd",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
