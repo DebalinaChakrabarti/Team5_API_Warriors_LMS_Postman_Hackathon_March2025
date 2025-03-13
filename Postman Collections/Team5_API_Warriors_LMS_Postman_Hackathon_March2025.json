@@ -1370,6 +1370,48 @@
 					"response": []
 				},
 				{
+					"name": "Get all Active User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "198747ea-c519-4863-ac8e-94c6aceb54ed",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "b4833a30-21f5-450a-b05f-dbb35f9dd916",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
 					"name": "CreateUser",
 					"event": [
 						{
