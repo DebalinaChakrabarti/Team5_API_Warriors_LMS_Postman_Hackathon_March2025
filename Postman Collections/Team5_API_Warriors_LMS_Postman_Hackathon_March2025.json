@@ -1328,6 +1328,48 @@
 					"response": []
 				},
 				{
+					"name": "Get emails of all users with active status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "198747ea-c519-4863-ac8e-94c6aceb54ed",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "23db075f-15c1-4e79-b213-a523a740c836",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
 					"name": "CreateUser",
 					"event": [
 						{
