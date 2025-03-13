@@ -1841,6 +1841,22 @@
 				},
 				{
 					"name": "Get all Upcoming Classes for particular Student",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "778e09e0-e5a0-4bb8-b86b-ea749780a75e",
+								"exec": [
+									"if(pm.collectionVariables.get(\"StudentId\")){",
+									"    var studentId = pm.collectionVariables.get(\"StudentId\");",
+									"    pm.collectionVariables.set(\"validStudentId_cl\",studentId);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "a61f6917-0560-4fc4-a2c9-f33943497e32",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -2614,7 +2630,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "79b4f68a-6a8a-403b-be21-4554a431591c",
+				"id": "6a86638a-f2e7-42c7-9cb5-d063614a6cbb",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -2682,7 +2698,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "0a337243-1a29-4c72-a90b-1bd57df2511f",
+				"id": "339fcaf6-3b49-43e3-a647-78a3a6958887",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -2835,7 +2851,7 @@
 			"type": "string"
 		},
 		{
-			"key": "StaffID",
+			"key": "StaffId",
 			"value": "",
 			"type": "string"
 		},
