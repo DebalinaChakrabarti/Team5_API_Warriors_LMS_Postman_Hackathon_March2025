@@ -1,0 +1,2654 @@
+{
+	"info": {
+		"_postman_id": "78dda730-d04a-4596-9789-df03aebbae6a",
+		"name": "Team5_API_Warriors_LMS_Hackathon_March2025",
+		"schema": "https://schema.postman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3e843d91-783b-45ed-8313-76ed5bde36a9",
+								"exec": [
+									"if(pm.variables.get(\"statusCode\")===200){\r",
+									"    var jsonData = pm.response.json();\r",
+									"pm.environment.set(\"authToken\",jsonData.token);\r",
+									"}\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "23a28ae7-c7ef-4554-954b-7918a571ad24",
+								"exec": [
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "176e6dd2-05de-4513-be96-4ca22d6c0217",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"password\": \"{{user_password}}\",\r\n  \"userLoginEmailId\": \"{{user_LoginEmail}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				}
+			],
+			"id": "8ffdca0d-f307-4a03-81b6-c14eb2d1481b"
+		},
+		{
+			"name": "Program",
+			"item": [
+				{
+					"name": "Create Program",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "419d45ff-7433-4a41-a876-44df4a0194f0",
+								"exec": [
+									"// ✅ Execute after the request completes\r",
+									"pm.test(\"Validate and Store Program ID\", function () {\r",
+									"    if (pm.response.code === 201) {\r",
+									"        try {\r",
+									"            let jsonResponse = pm.response.json();\r",
+									"\r",
+									"            // ✅ Ensure `programId` is present in the response\r",
+									"            if (jsonResponse.hasOwnProperty(\"programId\")) {\r",
+									"                let programId = jsonResponse.programId;\r",
+									"                let programName = jsonResponse.programName;\r",
+									"                // ✅ Store `programId` in Collection Level\r",
+									"                pm.collectionVariables.set(\"programId\", programId);\r",
+									"                pm.collectionVariables.set(\"program_name\", programName);\r",
+									" //               pm.collectionVariables.set(\"programName\", programName);\r",
+									"                //pm.collectionVariables.set(\"programName\", programName);\r",
+									"                // ✅ Log confirmation\r",
+									"                console.log(\"✅ Stored programId in Collection:\", programId);\r",
+									"            } else {\r",
+									"                console.warn(\"⚠️ `programId` not found in response!\");\r",
+									"            }\r",
+									"        } catch (e) {\r",
+									"            console.error(\"❌ Error parsing JSON response:\", e);\r",
+									"        }\r",
+									"    } else {\r",
+									"        console.warn(\"⚠️ Program creation failed, skipping programId storage.\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"// var jsonData;\r",
+									"// try {\r",
+									"//     jsonData = pm.response.json();\r",
+									"// } catch (e) {\r",
+									"//     jsonData = {};  // Prevents script failure if response is empty or not JSON\r",
+									"// }\r",
+									"\r",
+									"// // Store Program ID & Name in Collection Variables for Positive Responses\r",
+									"// if (pm.response.code === 201 && jsonData.programId) {\r",
+									"//     pm.collectionVariables.set(\"programId\", jsonData.programId);\r",
+									"//     pm.collectionVariables.set(\"programName\", jsonData.programName);\r",
+									"// } else if (pm.response.code === 201 && !jsonData.programId) {\r",
+									"//     console.warn(\" Warning: `programId` missing in response despite 201 Created status!\");\r",
+									"// }\r",
+									"\r",
+									"// // Validate Status Code (Handles Both Positive & Negative)\r",
+									"// pm.test(\"Validate Status Code\", function () {\r",
+									"//     pm.expect(pm.response.code).to.be.oneOf([201, 400, 401, 404, 405]); \r",
+									"// });\r",
+									"\r",
+									"// // Validate Status Line (Based on Response Code)\r",
+									"// pm.test(\"Validate Status Line\", function () {\r",
+									"//     const expectedStatus = {\r",
+									"//         201: \"Created\",\r",
+									"//         400: \"Bad Request\",\r",
+									"//         401: \"Unauthorized\",\r",
+									"//         404: \"Not Found\",\r",
+									"//         405: \"Method Not Allowed\"\r",
+									"//     };\r",
+									"//     pm.expect(pm.response.status).to.eql(expectedStatus[pm.response.code]);\r",
+									"// });\r",
+									"\r",
+									"// //  Validate Content-Type Header (Fix for `undefined` issue)\r",
+									"// pm.test(\"Validate Content-Type Header\", function () {\r",
+									"//     let contentType = pm.response.headers.get(\"Content-Type\");\r",
+									"\r",
+									"//     // Ensure the header exists before proceeding\r",
+									"//     pm.expect(contentType, \"Content-Type header should be present\").to.not.be.undefined;\r",
+									"\r",
+									"//     //  Allow HTML responses for invalid endpoints or 405 errors\r",
+									"//     if ((pm.response.code === 404 || pm.response.code === 405) && contentType.includes(\"text/html\")) {\r",
+									"//         console.warn(`⚠️ Warning: ${pm.response.code} response returned 'text/html', indicating a possible invalid request or method.`);\r",
+									"//     } else {\r",
+									"//         pm.expect(contentType).to.include.oneOf([\"application/json\", \"text/plain\"], \r",
+									"//             `Unexpected Content-Type: ${contentType}`);\r",
+									"//     }\r",
+									"// });\r",
+									"\r",
+									"// //  Handle Positive Scenarios (201 Created)\r",
+									"// if (pm.response.code === 201) {\r",
+									"//     pm.test(\"Response contains correct programName\", function () {\r",
+									"//         pm.expect(jsonData.programName).to.eql(pm.collectionVariables.get(\"programName\"));\r",
+									"//     });\r",
+									"\r",
+									"//     //  Schema Validation for Success\r",
+									"//     const successSchema = {\r",
+									"//         \"type\": \"object\",\r",
+									"//         \"properties\": {\r",
+									"//             \"programId\": { \"type\": \"integer\" },\r",
+									"//             \"programName\": { \"type\": \"string\" },\r",
+									"//             \"programDescription\": { \"type\": \"string\" },\r",
+									"//             \"programStatus\": { \"type\": \"string\" },\r",
+									"//             \"creationTime\": { \"type\": \"string\", \"format\": \"date-time\" },\r",
+									"//             \"lastModTime\": { \"type\": \"string\", \"format\": \"date-time\" }\r",
+									"//         },\r",
+									"//         \"required\": [\"programId\", \"programName\", \"programStatus\"]\r",
+									"//     };\r",
+									"\r",
+									"//     pm.test(\"Response Schema is Valid (Success)\", function () {\r",
+									"//         pm.response.to.have.jsonSchema(successSchema);\r",
+									"//     });\r",
+									"\r",
+									"// } else {\r",
+									"//     // Handle Negative Scenarios (Error Responses)\r",
+									"//     pm.test(\"Validate statusText in Error Response\", function () {\r",
+									"//         if (jsonData.hasOwnProperty(\"statusText\")) {\r",
+									"//             pm.expect(jsonData.statusText).to.be.oneOf([\r",
+									"//                 \"Bad Request\",\r",
+									"//                 \"Unauthorized\",\r",
+									"//                 \"Not Found\",\r",
+									"//                 \"Method Not Allowed\"\r",
+									"//             ]);\r",
+									"//         } else {\r",
+									"//             console.warn(\"⚠️ Warning: `statusText` is missing in response! Check API behavior.\");\r",
+									"//         }\r",
+									"//     });\r",
+									"\r",
+									"//     //  Log **405 Method Not Allowed** cases explicitly\r",
+									"//     if (pm.response.code === 405) {\r",
+									"//         console.error(\"❌ 405 Method Not Allowed - Check if request method is correct.\");\r",
+									"//     }\r",
+									"\r",
+									"//     //  Schema Validation for Failure\r",
+									"//     const errorSchema = {\r",
+									"//         \"type\": \"object\",\r",
+									"//         \"properties\": {\r",
+									"//             \"statusCode\": { \"type\": \"integer\" },\r",
+									"//             \"statusText\": { \"type\": \"string\" },\r",
+									"//             \"message\": { \"type\": \"string\" }\r",
+									"//         },\r",
+									"//         \"required\": [\"statusCode\", \"statusText\", \"message\"]\r",
+									"//     };\r",
+									"\r",
+									"//     pm.test(\"Response Schema is Valid (Failure)\", function () {\r",
+									"//         try {\r",
+									"//             pm.response.to.have.jsonSchema(errorSchema);\r",
+									"//         } catch (e) {\r",
+									"//             pm.test(\"Error Response Schema Missing Fields\", function () {\r",
+									"//                 console.warn(\"⚠️ Error response is missing expected fields!\");\r",
+									"//             });\r",
+									"//         }\r",
+									"//     });\r",
+									"\r",
+									"//     // ✅ Log Error Messages for Debugging\r",
+									"//     console.error(\"❌ API Request Failed - Debugging Info:\", {\r",
+									"//         statusCode: pm.response.code,\r",
+									"//         statusText: pm.response.status,\r",
+									"//         responseBody: jsonData\r",
+									"//     });\r",
+									"// }\r",
+									"\r",
+									"// // ✅ Move Authorization Header Fix to **Pre-request Script**\r",
+									"// // Authorization header is correctly set using `authToken` from environment (No \"Bearer \")\r",
+									"// pm.test(\"Authorization header should be properly set\", function () {\r",
+									"//     let authHeader = pm.request.headers.get(\"Authorization\");\r",
+									"//     pm.expect(authHeader).to.match(/^Bearer\\s.+$/, \"Authorization header is missing or incorrect\");\r",
+									"// });\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f7d7b673-6f38-43a0-a2d1-3ca7fb0472e0",
+								"exec": [
+									"\r",
+									"\r",
+									"// ✅ Function to Generate Random Suffix (3 Random Letters)\r",
+									"function getRandomSuffix(length = 3) {\r",
+									"    let characters = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+									"    return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');\r",
+									"}\r",
+									"\r",
+									"// ✅ Generate a temporary random program name\r",
+									"\r",
+									"\r",
+									"// ✅ Store it in the collection level under `programName`\r",
+									"\r",
+									"var statusCode = pm.variables.get(\"statusCode\");\r",
+									"console.log(\"statusCode \"+statusCode);\r",
+									"if(statusCode === 201){\r",
+									"let randomProgramName = \"March-Team-Warriors-API-\" + getRandomSuffix();\r",
+									"console.log(\"✅ Randomly Generated Program Name:\", randomProgramName);\r",
+									"pm.collectionVariables.set(\"program_name\", randomProgramName);\r",
+									"}else{\r",
+									" pm.collectionVariables.set(\"program_name\", pm.variables.get(\"programName\"));\r",
+									"}\r",
+									"\r",
+									"console.log(\"✅ Program Name:\", pm.collectionVariables.get(\"programName\"));\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"// ✅ Log the generated name for clarity\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"// // ✅ Set Content-Type Header Dynamically\r",
+									"// pm.request.headers.add({\r",
+									"//     key: \"Content-Type\",\r",
+									"//     value: pm.variables.get(\"contentType\")\r",
+									"// });\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"// // ✅ Function to Generate a Random Suffix (3 Random Letters)\r",
+									"// function getRandomSuffix(length = 3) {\r",
+									"//     let characters = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+									"//     return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');\r",
+									"// }\r",
+									"\r",
+									"// // ✅ Generate Unique Program Name & Store in Collection Level\r",
+									"// let baseProgramName = \"Team-Warriors-API\";\r",
+									"// let uniqueProgramName = baseProgramName + \"-\" + getRandomSuffix();\r",
+									"\r",
+									"// // ✅ Store the generated programName in Collection Level\r",
+									"// pm.collectionVariables.set(\"programName\", uniqueProgramName);\r",
+									"\r",
+									"// // ✅ Set Content-Type Header\r",
+									"// pm.request.headers.add({\r",
+									"//     key: \"Content-Type\",\r",
+									"//     value: pm.variables.get(\"contentType\")\r",
+									"// });\r",
+									"\r",
+									"// // ✅ Debugging - Check if programName is set\r",
+									"// console.log(\"Generated programName:\", pm.collectionVariables.get(\"programName\"));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "3e5cc8a8-c523-4cdd-9185-14d54792e061",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"programName\": \"{{program_name}}\",\r\n    \"programDescription\": \"API Automation Program\",\r\n    \"programStatus\": \"Active\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Programs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "be804b34-b235-47ba-9dd0-76829ecd6f74",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "012f9557-0423-43f8-842b-af2e22b5a0f0",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "8108aba1-a381-49ee-9bca-e6111e9865ae",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Programs with Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b2e78648-2b42-418c-b43e-28be40e50a74",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bad66b4c-4be3-4ed3-8c93-a00ac4d2c070",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "d6ef2d1a-9af7-4933-812b-a3d2680eecb3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Program by ProgramID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "94d69439-8060-47df-b4c4-b39d43b1b700",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e8b329fa-172b-4c2b-9916-f80a0aa35a7b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "bc44cdf1-4acb-498d-bc8c-cff6aaabce2a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Program by ProgramName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ee506db5-551e-4374-b361-fbd7ceb15120",
+								"exec": [
+									"// ✅ Store the Updated Program Name for Future Requests\r",
+									"if (pm.variables.get(\"statusCode\") === 200) {\r",
+									"    \r",
+									"\r",
+									"// ✅ Validate Response Schema\r",
+									"if (pm.response.code === 200) {\r",
+									"\r",
+									"        let responseBody = pm.response.json();\r",
+									"\r",
+									"    pm.test(\"Response Schema is Valid\", function () {\r",
+									"        const schema = {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"programId\": { \"type\": \"integer\" },\r",
+									"                \"programName\": { \"type\": \"string\" },\r",
+									"                \"programDescription\": { \"type\": \"string\" },\r",
+									"                \"programStatus\": { \"type\": \"string\" },\r",
+									"                \"creationTime\": { \"type\": \"string\", \"format\": \"date-time\" },\r",
+									"                \"lastModTime\": { \"type\": \"string\", \"format\": \"date-time\" }\r",
+									"            },\r",
+									"            \"required\": [\"programId\", \"programName\", \"programStatus\"]\r",
+									"        };\r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"    var jsonSchemaValidation = () =>{\r",
+									"    pm.test(\"Verify JSON Schema using AJV\", function () {\r",
+									"        pm.response.to.have.jsonSchema(schema);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"}\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d4fc29dd-d90e-4bfd-b916-aa9209bff74f",
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: \"Content-Type\",\r",
+									"    value: pm.variables.get(\"contentType\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "59abf990-43b8-4445-9a96-67ba57de85be",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"programDescription\": \"{{programDescription}}\",\r\n    \"programName\": \"{{programName}}\",\r\n    \"programStatus\": \"{{programStatus}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Program by ProgramID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ee506db5-551e-4374-b361-fbd7ceb15120",
+								"exec": [
+									" // ✅ Schema Validation for Success Response\r",
+									" if(pm.variables.get(\"statusCode\"===200)){\r",
+									"    const successSchema = {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"programId\": { \"type\": \"integer\" },\r",
+									"            \"programName\": { \"type\": \"string\" },\r",
+									"            \"programDescription\": { \"type\": \"string\" },\r",
+									"            \"programStatus\": { \"type\": \"string\" },\r",
+									"            \"creationTime\": { \"type\": \"string\", \"format\": \"date-time\" },\r",
+									"            \"lastModTime\": { \"type\": \"string\", \"format\": \"date-time\" }\r",
+									"        },\r",
+									"        \"required\": [\"programId\", \"programName\", \"programDescription\", \"programStatus\"]\r",
+									"    };\r",
+									"    pm.test(\"Response Schema is Valid (Success)\", function () {\r",
+									"        pm.response.to.have.jsonSchema(successSchema);\r",
+									"    });\r",
+									" }\r",
+									"// } else {\r",
+									"//     // ✅ Handle **Negative Scenarios**\r",
+									"//     pm.test(\"Error Response contains expected fields\", function () {\r",
+									"//         pm.expect(jsonData).to.be.an(\"object\");\r",
+									"//         pm.expect(jsonData).to.have.property(\"statusCode\");\r",
+									"//         pm.expect(jsonData).to.have.property(\"statusText\");\r",
+									"//     });\r",
+									"\r",
+									"//     // ✅ Validate **Correct Error Messages**\r",
+									"//     pm.test(\"Validate Correct Error Message\", function () {\r",
+									"//         pm.expect(jsonData.statusText).to.be.oneOf([\r",
+									"//             \"Bad Request\", \r",
+									"//             \"Unauthorized\", \r",
+									"//             \"Not Found\", \r",
+									"//             \"Method Not Allowed\"\r",
+									"//         ]);\r",
+									"//     });\r",
+									"// }\r",
+									"//     // ✅ Schema Validation for Failure Responses\r",
+									"//     const errorSchema = {\r",
+									"//         \"type\": \"object\",\r",
+									"//         \"properties\": {\r",
+									"//             \"statusCode\": { \"type\": \"integer\" },\r",
+									"//             \"statusText\": { \"type\": \"string\" },\r",
+									"//             \"message\": { \"type\": \"string\" }\r",
+									"//         },\r",
+									"//         \"required\": [\"statusCode\", \"statusText\", \"message\"]\r",
+									"//     };\r",
+									"//     pm.test(\"Response Schema is Valid (Failure)\", function () {\r",
+									"//         try {\r",
+									"//             pm.response.to.have.jsonSchema(errorSchema);\r",
+									"//         } catch (e) {\r",
+									"//             pm.test(\"Error Response Schema Missing Fields\", function () {\r",
+									"//                 console.warn(\"Error response is missing expected fields!\");\r",
+									"//             });\r",
+									"//         }\r",
+									"//     });\r",
+									"// }\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"// var jsonData;\r",
+									"// try {\r",
+									"//     jsonData = pm.response.json(); // Attempt to parse JSON\r",
+									"// } catch (e) {\r",
+									"//     jsonData = {}; // If parsing fails, assign an empty object\r",
+									"//     console.warn(\"Response is not a valid JSON:\", e);\r",
+									"// }\r",
+									"\r",
+									"// // ✅ Store updated programId & programName in collection variables (only for 200 success cases)\r",
+									"// if (pm.response.code === 200 && jsonData.programId) {\r",
+									"//     pm.collectionVariables.set(\"programId\", jsonData.programId);\r",
+									"//     pm.collectionVariables.set(\"programName\", jsonData.programName);\r",
+									"//     console.log(\"Updated programId:\", jsonData.programId);\r",
+									"//     console.log(\"Updated programName:\", jsonData.programName);\r",
+									"// }\r",
+									"\r",
+									"// // ✅ Validate Status Code (Handles Both Positive & Negative)\r",
+									"// pm.test(\"Validate Status Code\", function () {\r",
+									"//     pm.expect(pm.response.code).to.be.oneOf([200, 400, 401, 404, 405]); \r",
+									"// });\r",
+									"\r",
+									"// // ✅ Validate Status Line Based on Response Code\r",
+									"// pm.test(\"Validate Status Line\", function () {\r",
+									"//     const expectedStatus = {\r",
+									"//         200: \"OK\",\r",
+									"//         400: \"Bad Request\",\r",
+									"//         401: \"Unauthorized\",\r",
+									"//         404: \"Not Found\",\r",
+									"//         405: \"Method Not Allowed\"\r",
+									"//     };\r",
+									"//     pm.expect(pm.response.status).to.eql(expectedStatus[pm.response.code]);\r",
+									"// });\r",
+									"\r",
+									"// // ✅ Validate Response Headers (Content-Type should be JSON)\r",
+									"// pm.test(\"Response has Content-Type JSON\", function () {\r",
+									"//     pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+									"// });\r",
+									"\r",
+									"// // ✅ Handle **Success Case (200 OK)** \r",
+									"// if (pm.response.code === 200) {\r",
+									"//     pm.test(\"Response contains correct updated program details\", function () {\r",
+									"//         pm.expect(jsonData.programName).to.eql(pm.collectionVariables.get(\"programName\"));\r",
+									"//         pm.expect(jsonData.programDescription).to.eql(\"UpdatedAgain API Automation Program\");\r",
+									"//         pm.expect(jsonData.programStatus).to.eql(\"Active\");\r",
+									"//     });\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4f843009-c3dc-48e3-bead-65fd72945d52",
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: \"Content-Type\",\r",
+									"    value: pm.variables.get(\"contentType\")\r",
+									"});\r",
+									"\r",
+									"function getRandomSuffix(length = 3) {\r",
+									"    let characters = \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\";\r",
+									"    return Array.from({ length }, () => characters.charAt(Math.floor(Math.random() * characters.length))).join('');\r",
+									"}\r",
+									"\r",
+									"// ✅ Store it in the collection level under `programName`\r",
+									"\r",
+									"var statusCode = pm.variables.get(\"statusCode\");\r",
+									"console.log(\"statusCode \"+statusCode);\r",
+									"if(statusCode === 200){\r",
+									"let randomProgramName = \"Updated-Warriors-Program-\" + getRandomSuffix();\r",
+									"console.log(\"✅ Randomly Generated Program Name:\", randomProgramName);\r",
+									"pm.collectionVariables.set(\"program_name\", randomProgramName);\r",
+									"}else{\r",
+									" pm.collectionVariables.set(\"program_name\", pm.variables.get(\"programName\"));\r",
+									"}\r",
+									"\r",
+									"console.log(\"✅ Program Name:\", pm.collectionVariables.get(\"programName\"));\r",
+									"\r",
+									"\r",
+									"\r",
+									"// // ✅ Retrieve stored programId from collection variables\r",
+									"// let storedProgramId = pm.collectionVariables.get(\"programId\");\r",
+									"\r",
+									"// if (storedProgramId) {\r",
+									"//     console.log(\"✅ Using stored programId:\", storedProgramId);\r",
+									"// } else {\r",
+									"//     console.error(\"❌ programId is not set! Ensure it's captured from the POST response.\");\r",
+									"// }\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "1168387b-65de-4dcc-97c7-93fd678deb61",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"programName\": \"{{program_name}}\",\r\n    \"programDescription\": \"{{programDescription}}\",\r\n    \"programStatus\": \"{{programStatus}}\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				}
+			],
+			"id": "118fd779-4818-4783-a765-7ed0120fe6b2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6342e2b2-f47b-4fd9-bf39-0a08f1a01607",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"// // ✅ Set Authorization Header if required\r",
+							"// let authType = pm.variables.get(\"authType\");\r",
+							"\r",
+							"// if (authType === \"Bearer Token\") {\r",
+							"//     let authToken = pm.environment.get(\"authToken\");\r",
+							"//     if (authToken) {\r",
+							"//         pm.request.headers.add({ key: \"Authorization\", value: `Bearer ${authToken}` });\r",
+							"//         console.log(\"✅ Authorization header set.\");\r",
+							"//     } else {\r",
+							"//         console.warn(\"⚠️ No authToken found! Running request without authentication.\");\r",
+							"//     }\r",
+							"// }\r",
+							"\r",
+							"// // ✅ Set Content-Type Header\r",
+							"// pm.request.headers.add({\r",
+							"//     key: \"Content-Type\",\r",
+							"//     value: pm.variables.get(\"contentType\")\r",
+							"// });\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a491e8da-0c23-440c-bfe7-04ba2169fd6b",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Batch",
+			"item": [
+				{
+					"name": "Get All Batches",
+					"id": "a1aaf652-90af-4da9-b8b8-85d6c2a3e861",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Batch",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7e117e9d-e58f-4db0-888f-cc4083686857",
+								"exec": [
+									" console.log(\"pm.variables.statuscode\" +pm.variables.get(\"statusCode\"));",
+									" ",
+									" if(pm.variables.get(\"statusCode\")===201 || pm.response.code === 201){",
+									"   var jsonData = pm.response.json();",
+									"    console.log(\"pm.response.code\" +pm.response.code);",
+									"",
+									"   //-----------COLLECTION VARIABLE SET UP---------",
+									"   pm.collectionVariables.set('batchid_cl',jsonData.batchId);",
+									"   pm.collectionVariables.set('batchName_cl',jsonData.batchName);",
+									" }",
+									"",
+									"",
+									"// if(pm.variables.get(\"statusCode\")===201){",
+									"",
+									"//    const expectedSchema = {",
+									"//   \"type\": \"object\",",
+									"//   \"properties\": {",
+									"//     \"batchDescription\": { ",
+									"//         \"type\": \"string\"",
+									"//          },",
+									"//     \"batchName\": {  ",
+									"//         \"type\": \"string\" ",
+									"//         },",
+									"//     \"batchNoOfClasses\": { ",
+									"//         \"type\": \"integer\"",
+									"//          },",
+									"//     \"batchStatus\": { ",
+									"//         \"type\": \"string\"",
+									"//          },",
+									"//     \"programId\": { ",
+									"//         \"type\": \"integer\"",
+									"//          },",
+									"//     \"batchId\": { ",
+									"//         \"type\": \"integer\"",
+									"//          },",
+									"         ",
+									"//     \"programName\": {  ",
+									"//         \"type\": \"string\" ",
+									"//         },",
+									"",
+									"//     },",
+									"//     \"required\": [\"batchDescription\", \"batchName\", \"batchNoOfClasses\", \"batchStatus\", \"programId\", \"batchId\", \"programName\"]",
+									"// }",
+									"// };",
+									"",
+									"",
+									"",
+									"//  if(pm.variables.get(\"statusCode\")===201){",
+									"//    var jsonData = pm.response.json();",
+									"//    //-----------COLLECTION VARIABLE SET UP---------",
+									"//    pm.collectionVariables.set('batchid_cl',jsonData.batchId);",
+									"//    pm.collectionVariables.set('batchName_cl',jsonData.batchName);",
+									" ",
+									"",
+									"",
+									"//     //calling jsonSchemaValidation methods",
+									"// //eval(pm.environment.get(\"jsonSchemaValidation\"))();",
+									"",
+									"",
+									"// //Data Type Validation",
+									"// pm.test(\"Validating Test Data Type Of the Response\", () => {",
+									"//     pm.expect(jsonData).to.be.an(\"object\");",
+									"//      pm.expect(jsonData.batchDescription).to.be.a(\"string\");",
+									"//      pm.expect(jsonData.batchName).to.be.a(\"string\");",
+									"//      pm.expect(jsonData.batchNoOfClasses).to.be.a(\"number\");",
+									"//      pm.expect(jsonData.batchStatus).to.be.a(\"string\");",
+									"//      pm.expect(jsonData.programId).to.be.a(\"number\");",
+									"//      pm.expect(jsonData.batchId).to.be.a(\"number\");",
+									"//      pm.expect(jsonData.programName).to.be.a(\"string\");",
+									"// });",
+									"",
+									"",
+									"//     pm.test(\"Validating Batch ID\", () => {",
+									"//     pm.expect(jsonData.batchId).to.equal(pm.collectionVariables.get(\"batchid_cl\"));",
+									"//     });",
+									"",
+									"",
+									"//     pm.test(\"Validating Batch Name\", () => {",
+									"//     pm.expect(jsonData.batchName).to.equal(pm.collectionVariables.get(\"batchName_cl\"));",
+									"//     });",
+									"",
+									"",
+									"//     pm.test(\"Validating Program ID\", () => {",
+									"//     pm.expect(jsonData.programId).to.equal(pm.collectionVariables.get(\"programId\"));",
+									"//     });",
+									"",
+									"//  }",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8c4c8b22-0467-4e69-a93c-acb45fa744ec",
+								"exec": [
+									"var statusCode = pm.variables.get(\"statusCode\");",
+									"console.log(\"statusCode \"+statusCode);",
+									"if(statusCode === 201){",
+									"var batch_name = \"APIWarriorsBatch\"+ \"-\" + pm.variables.replaceIn('{{$randomFirstName}}');",
+									"pm.collectionVariables.set(\"batchName_cl\", batch_name);",
+									"}else{",
+									" pm.collectionVariables.set(\"batchName_cl\", pm.variables.get(\"batchName\"));   ",
+									"}",
+									"console.log(\"Batch Name \"+pm.collectionVariables.get(\"batchName_cl\"));",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "d1c0f9cf-93a1-4b9f-b5b5-b501ca61806b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"batchDescription\":\"{{batchDescription}}\",\r\n \"batchName\":\"{{batchName_cl}}\",\r\n \"batchNoOfClasses\":\"{{batchNoOfClasses}}\",\r\n \"batchStatus\":\"{{batchStatus}}\",\r\n \"programId\":{{programId}}\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get batch by ProgramID",
+					"id": "79288a77-02ae-42fe-a09e-29b32b72e3ea",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get batch by BatchID",
+					"id": "1504c1bd-6a7e-40ab-afcb-b406a94cec7e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get batch by BatchName",
+					"id": "161d9378-b768-44a4-9111-b238c39a78d9",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Batch",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "63de6199-a938-4cb5-a57a-d234f7bd2455",
+								"exec": [
+									"if(pm.variables.get(\"statusCode\")===200){\r",
+									"\r",
+									"   const expectedSchema = {\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"batchDescription\": { \r",
+									"        \"type\": \"string\"\r",
+									"         },\r",
+									"    \"batchName\": {  \r",
+									"        \"type\": \"string\" \r",
+									"        },\r",
+									"    \"batchNoOfClasses\": { \r",
+									"        \"type\": \"integer\"\r",
+									"         },\r",
+									"    \"batchStatus\": { \r",
+									"        \"type\": \"string\"\r",
+									"         },\r",
+									"    \"programId\": { \r",
+									"        \"type\": \"integer\"\r",
+									"         },\r",
+									"    \"batchId\": { \r",
+									"        \"type\": \"integer\"\r",
+									"         },\r",
+									"         \r",
+									"    \"programName\": {  \r",
+									"        \"type\": \"string\" \r",
+									"        },\r",
+									"\r",
+									"    },\r",
+									"    \"required\": [\"batchDescription\", \"batchName\", \"batchNoOfClasses\", \"batchStatus\", \"programId\", \"batchId\", \"programName\"]\r",
+									"}\r",
+									"};\r",
+									"\r",
+									"\r",
+									"\r",
+									" if(pm.variables.get(\"statusCode\")===200){\r",
+									"   var jsonData = pm.response.json();\r",
+									"   //-----------COLLECTION VARIABLE SET UP---------\r",
+									"  \r",
+									"    //calling jsonSchemaValidation methods\r",
+									"eval(pm.environment.get(\"jsonSchemaValidation\"))();\r",
+									"\r",
+									"\r",
+									"//Data Type Validation\r",
+									"pm.test(\"Validating Test Data Type Of the Response\", () => {\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"     pm.expect(jsonData.batchDescription).to.be.a(\"string\");\r",
+									"     pm.expect(jsonData.batchName).to.be.a(\"string\");\r",
+									"     pm.expect(jsonData.batchNoOfClasses).to.be.a(\"number\");\r",
+									"     pm.expect(jsonData.batchStatus).to.be.a(\"string\");\r",
+									"     pm.expect(jsonData.programId).to.be.a(\"number\");\r",
+									"     pm.expect(jsonData.batchId).to.be.a(\"number\");\r",
+									"     pm.expect(jsonData.programName).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"    pm.test(\"Validating Batch ID\", () => {\r",
+									"    pm.expect(jsonData.batchId).to.equal(pm.collectionVariables.get(\"batchid_cl\"));\r",
+									"    });\r",
+									"\r",
+									" }\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "da121690-bc36-4e1b-8bbf-cd72b83d4328",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"batchDescription\":\"{{batchDescription}}\",\r\n \"batchId\":{{batchid_cl}},\r\n \"batchName\":\"{{batchName}}\",\r\n \"batchNoOfClasses\":\"{{batchNoOfClasses}}\",\r\n \"batchStatus\":\"{{batchStatus}}\",\r\n \"programId\":\"{{programId}}\",\r\n \"programName\": \"{{programName}}\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				}
+			],
+			"id": "bc4075bc-409b-4aa0-aa28-13b738c964f6",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ed315bd8-0b8d-4a73-a02f-f50b114f3c39",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"// if (typeof pm.variables.get('requestdata') !== 'object') {\r",
+							"//     pm.variables.set('requestdata', pm.iterationData.toObject());\r",
+							"// }\r",
+							"// const requestdata = pm.variables.get('requestdata');\r",
+							"\r",
+							"// if(typeof requestdata !== 'object' || Object.keys(requestdata).length ===0) {\r",
+							"//     console.log(\"No external file found\")\r",
+							"//     return;\r",
+							"// }\r",
+							"\r",
+							"// const currentrequest = requestdata.requests.filter(({name}) => name === pm.info.requestName) [0];\r",
+							"// if(!currentrequest){\r",
+							"//     console.log(`Request ${pm.info.requestName} has no data defined.`);\r",
+							"// }\r",
+							"\r",
+							"// const variables = currentrequest.data.shift();\r",
+							"\r",
+							"// Object.entries(variables).forEach(([key, value]) => {\r",
+							"//         pm.variables.set(key, value);\r",
+							"//     });\r",
+							"\r",
+							"// // if (variables.authType === \"Bearer Token\") {\r",
+							"// //     const token = pm.environment.get(\"authToken\"); \r",
+							"// //     if (token) {\r",
+							"// //         pm.request.headers.add({ key: \"Authorization\", value: `Bearer ${token}` });\r",
+							"// //         console.log(\"Authorization Header Set: Bearer \" + token);\r",
+							"// //     } else {\r",
+							"// //         console.warn(\"No auth token found in environment!\");\r",
+							"// //     }\r",
+							"// // } else if (variables.authType === \"No Auth\") {\r",
+							"// //     pm.request.headers.remove(\"Authorization\");\r",
+							"// //      console.log(\"Authorization Header Removed (No Auth)\"); \r",
+							"// // }\r",
+							"\r",
+							"\r",
+							"// pm.variables.set('requestdata',requestdata);\r",
+							"// if(currentrequest.data.length > 0){\r",
+							"//     pm.execution.setNextRequest(pm.info.requestName)\r",
+							"// }\r",
+							"\r",
+							"// let method = pm.iterationData.get(\"method\"); // Get method from JSON file\r",
+							"// if (method) {\r",
+							"//     pm.request.method = method; // Set request method dynamically\r",
+							"//     console.log(\"Request Method Set:\", method);\r",
+							"// } else {\r",
+							"//     console.error(\"No method found in JSON file!\");\r",
+							"// }\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"if (typeof pm.variables.get('requestdata') !== 'object') {\r",
+							"    pm.variables.set('requestdata', pm.iterationData.toObject());\r",
+							"}\r",
+							"const requestdata = pm.variables.get('requestdata');\r",
+							"\r",
+							"if(typeof requestdata !== 'object' || Object.keys(requestdata).length ===0) {\r",
+							"    console.log(\"No external file found\")\r",
+							"    return;\r",
+							"}\r",
+							"\r",
+							"const currentrequest = requestdata.requests.filter(({name}) => name === pm.info.requestName) [0];\r",
+							"if(!currentrequest){\r",
+							"    console.log(`Request ${pm.info.requestName} has no data defined.`);\r",
+							"}\r",
+							"\r",
+							"const variables = currentrequest.data.shift();\r",
+							"\r",
+							"Object.entries(variables).forEach(([key, value]) => {\r",
+							"        pm.variables.set(key, value);\r",
+							"    });\r",
+							"\r",
+							"pm.variables.set('requestdata',requestdata);\r",
+							"if(currentrequest.data.length > 0){\r",
+							"    pm.execution.setNextRequest(pm.info.requestName)\r",
+							"}\r",
+							"\r",
+							"//  pm.variables.set('requestdata',requestdata);\r",
+							"// if(currentrequest.data.length > 0){\r",
+							"//     postman.setNextRequest(pm.info.requestName)\r",
+							"// }\r",
+							"\r",
+							"//------------------ Authorization Set Up-----------------\r",
+							"pm.request.headers.clear(); // Clear all headers to prevent residual values\r",
+							"var AuthType = pm.variables.get(\"authType\");\r",
+							"switch (AuthType) {\r",
+							"    case \"No Auth\":\r",
+							"        pm.request.auth = { type: 'noauth' };\r",
+							"        break;\r",
+							"    case \"Bearer Token\":\r",
+							"        const authToken = pm.environment.get(\"authToken\");\r",
+							"        if (authToken) {\r",
+							"            pm.request.headers.add({ key: \"Authorization\", value: `Bearer ${authToken}` });}\r",
+							"         else {console.log(\"AuthToken is not set in the environment.\");}\r",
+							"        break;\r",
+							"    case \"Invalid Bearer token\":\r",
+							"        pm.request.headers.add({ key: \"Authorization\", value: \"invalid\" });\r",
+							"         console.log(\"Using invalid bearer token.\");\r",
+							"        break;\r",
+							"    default:\r",
+							"        console.log(\"Unknown authType: \" + AuthType); break;\r",
+							"}\r",
+							"\r",
+							"//-------------- Set the Request Method Dynamically---------------\r",
+							" if (variables.method) {\r",
+							"    pm.request.method = variables.method;\r",
+							" }\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "8bb8c938-0503-4be2-82dd-25aa870c5c28",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"\r",
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "All users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "198747ea-c519-4863-ac8e-94c6aceb54ed",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "1b13eb2a-9765-4278-84db-e3bd8435aba4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "023ac4f4-4e00-42de-a46f-cb862b18050a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "72039046-c04b-4f7b-92e2-76dd7af1dbfe",
+								"exec": [
+									"var StatusCode = pm.response.code;\r",
+									"if(StatusCode === 201){\r",
+									"\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"console.log(jsonData.roles[0].roleId)\r",
+									"console.log(jsonData.user.userId)\r",
+									"var roleId = jsonData.roles[0].roleId;\r",
+									"var  userId = jsonData.user.userId;\r",
+									"\r",
+									"    if (roleId === \"R01\") {\r",
+									"        pm.collectionVariables.set(\"AdminID\", userId);\r",
+									"    } else if (roleId === \"R02\") {\r",
+									"        pm.collectionVariables.set(\"StaffId\", userId);\r",
+									"    } else if (roleId === \"R03\") {\r",
+									"        pm.collectionVariables.set(\"StudentId\", userId);\r",
+									"    }\r",
+									"//} \r",
+									"else {\r",
+									"    console.log(\"No user roles found.\");\r",
+									"}\r",
+									"userId = jsonData.user.userId;\r",
+									"pm.collectionVariables.set(\"userId\", jsonData.user.userId);\r",
+									"console.log(pm.collectionVariables.get(\"userId\"))\r",
+									"// Extracting roleId\r",
+									"roleId = jsonData.roles[0].roleId;  \r",
+									"// Storing in collection variable\r",
+									" pm.collectionVariables.set(\"roleId\", jsonData.roles[0].roleId);  \r",
+									"console.log(pm.collectionVariables.get(\"roleId\"))\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "e89f1921-87ba-4b30-b030-0faaa85c2fcc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"userComments\": \"{{userComments}}\",\r\n\"userEduPg\": \"{{userEduPg}}\",\r\n\"userEduUg\": \"{{userEduUg}}\",\r\n\"userFirstName\": \"{{userFirstName}}\",\r\n\"userLastName\": \"{{userLastName}}\",\r\n\"userLinkedinUrl\": \"{{userLinkedinUrl}}\",\r\n\"userLocation\": \"{{userLocation}}\",\r\n\"userMiddleName\": \"{{userMiddleName}}\",\r\n\"userPhoneNumber\": \"{{userPhoneNumber}}\",\r\n\"userRoleMaps\":\r\n[\r\n{\r\n\"roleId\": \"{{roleId}}\",\r\n\"userRoleStatus\": \"{{userRoleStatus}}\"\r\n}\r\n],\r\n\"userTimeZone\": \"{{userTimeZone}}\",\r\n\"userVisaStatus\": \"{{userVisaStatus}}\",\r\n\"userLogin\": {\r\n\"loginStatus\" : \"{{loginStatus}}\",\r\n\"userLoginEmail\": \"{{usersLoginEmail}}\"\r\n}\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Users with roles",
+					"id": "541df9be-4120-40a0-b79a-6261a036fc86",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users by roleId",
+					"id": "a87cfbe1-ee8c-4528-a34f-938a0f0529e2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Gets Users by V2 facets/filters",
+					"id": "05ddb95e-fc5e-46ff-aa12-d4b48570939c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User BatchID by UserId",
+					"id": "1fd9e7f3-e8f3-4f99-af82-122b56a72a26",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User information by UserId",
+					"id": "0e3036e4-f13a-4330-9fd2-54a7a5503d57",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				}
+			],
+			"id": "c1e52cf1-8807-4bd5-ac1a-c1b7c93db25a",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "23441ac5-5fe5-44a2-9c96-29ce5d0b47bc",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a2338c39-b7c5-4efc-b394-7f2a7230b795",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Class",
+			"item": [
+				{
+					"name": "Get All Class",
+					"id": "b6a7b797-efcf-4a05-be07-b368db5055d8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Class",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "66f1603d-2db9-46c1-b3b4-182822b86389",
+								"exec": [
+									" if(pm.variables.get(\"statusCode\")===201){",
+									"",
+									"   const expectedSchema = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"csId\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"batchId\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"classNo\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"classDate\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classTopic\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classStatus\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classStaffId\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classDescription\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classComments\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classNotes\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classRecordingPath\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"batchName\": {",
+									"      \"type\": \"null\"",
+									"    },",
+									"    \"classScheduledDates\": {",
+									"      \"type\": \"array\",",
+									"      \"items\": [",
+									"        {",
+									"          \"type\": \"string\"",
+									"        }",
+									"      ]",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"csId\",",
+									"    \"batchId\",",
+									"    \"classNo\",",
+									"    \"classDate\",",
+									"    \"classTopic\",",
+									"    \"classStatus\",",
+									"    \"classStaffId\",",
+									"    \"classDescription\",",
+									"    \"classComments\",",
+									"    \"classNotes\",",
+									"    \"classRecordingPath\",",
+									"    \"batchName\",",
+									"    \"classScheduledDates\"",
+									"  ]",
+									"}",
+									"",
+									"// Get the status code of the response",
+									"var StatusCode = pm.response.code;",
+									"if(StatusCode === 201){",
+									"",
+									"    var jsonData = pm.response.json();",
+									"   //-----------COLLECTION VARIABLE SET UP---------",
+									"   pm.collectionVariables.set(\"classid_cl\",jsonData.csId);",
+									"   pm.collectionVariables.set(\"classTopic_cl\",jsonData.classTopic);",
+									"   pm.collectionVariables.set(\"validStaffID_cl\",jsonData.classStaffId);",
+									" ",
+									"    //calling jsonSchemaValidation methods",
+									"    eval(pm.environment.get(\"jsonSchemaValidation\"))();",
+									"",
+									"    //Data Type Validation",
+									"    pm.test(\"Validating Test Data Type Of the Response\", () => {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData.csId).to.be.a(\"number\");",
+									"    pm.expect(jsonData.batchId).to.be.a(\"number\");",
+									"    pm.expect(jsonData.classDate).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classTopic).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classStatus).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classStaffId).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classScheduledDates).to.be.an(\"array\");",
+									"",
+									"        // // Validate classScheduledDates",
+									"        // pm.expect(typeof jsonData.classScheduledDates).to.eql(\"object\" || \"null\", \"Expected 'classScheduledDates' to be a object\");",
+									"     });",
+									"",
+									"",
+									"    pm.test(\"Validating ClassTopic\", () => {",
+									"        pm.expect(jsonData.classTopic).to.equal(pm.collectionVariables.get(\"classTopic_cl\"));",
+									"    });",
+									"    pm.test(\"Validating Batch ID\", () => {",
+									"    pm.expect(jsonData.batchId).to.equal(pm.collectionVariables.get(\"batchid_cl\"));",
+									"    });",
+									"",
+									"    pm.test(\"Validating classStaffId\", () => {",
+									"        pm.expect(jsonData.classStaffId).to.equal(pm.variables.get(\"classStaffId\"));",
+									"    });",
+									"",
+									"",
+									"    }",
+									"   ",
+									" }",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f624d44d-ec3a-46f0-b49d-0674849cbb14",
+								"exec": [
+									"pm.request.headers.add({",
+									"    key: \"Content-Type\",",
+									"    value: pm.variables.get(\"contentType\")",
+									"});",
+									"pm.variables.set(\"classScheduledDates\", JSON.stringify(pm.variables.get(\"classScheduledDates\")));",
+									"",
+									"var statusCode = pm.variables.get(\"statusCode\");",
+									"console.log(\"statusCode \"+statusCode);",
+									"if(statusCode === 201){",
+									"var class_topic = \"APIWarriorsClass\"+ \"-\" + pm.variables.replaceIn('{{$randomFirstName}}');",
+									"pm.collectionVariables.set(\"classTopic_cl\", class_topic);",
+									"}else{",
+									" pm.collectionVariables.set(\"classTopic_cl\", pm.variables.get(\"classTopic\"));   ",
+									"}",
+									"console.log(\"Class Topic \"+pm.collectionVariables.get(\"classTopic_cl\"));",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "598125a5-9a55-4f90-8f9f-64d9358a3359",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"batchId\": {{batchId}},\n  \"classComments\": \"{{classComments}}\",\n  \"classDate\": \"{{classDate}}\",\n  \"classDescription\": \"{{classDescription}}\",\n  \"classNo\": {{classNo}},\n  \"classNotes\": \"{{classNotes}}\",\n  \"classStatus\": \"{{classStatus}}\",\n  \"classRecordingPath\": \"{{classRecordingPath}}\",\n  \"classStaffId\": \"{{classStaffId}}\",\n  \"classTopic\": \"{{classTopic_cl}}\",\n  \"classScheduledDates\": {{classScheduledDates}}\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Upcoming Classes for particular Student",
+					"id": "a61f6917-0560-4fc4-a2c9-f33943497e32",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get class recordings by BatchId",
+					"id": "a1c1c306-677d-434b-a315-21579c56f26a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Class details by Id",
+					"id": "49cb62ba-0278-490a-96c6-a25e25773a65",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Classes by Class topic",
+					"id": "38f73276-fcbb-47f2-a4b1-77b50d961920",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Classes by BatchId",
+					"id": "8b3dd128-047d-4e99-b0b1-2768f9fadb5e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Classes by StaffId",
+					"id": "01ec1fde-9289-4c80-9d5e-bd8419cdd9bc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all recordings",
+					"id": "f248ef89-d14d-458c-8a50-2d5661caa280",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Class Recordings by Class Id",
+					"id": "51d9f75f-f305-4221-9e0a-3bc35b7ee62b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update New Class",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1470ffe9-ac76-45ef-80a1-3ec7e89ac742",
+								"exec": [
+									"if(pm.variables.get(\"statusCode\")===200){",
+									"",
+									"",
+									" //-------------SCHEMA VALIDATION---------------",
+									" var expectedSchema = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"csId\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"batchId\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"classNo\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"classDate\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classTopic\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classStatus\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classStaffId\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classDescription\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classComments\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classNotes\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classRecordingPath\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"batchName\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classScheduledDates\": {",
+									"      \"type\": \"array\",",
+									"      \"items\": [",
+									"        {",
+									"          \"type\": \"string\"",
+									"        }",
+									"      ]",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"csId\",",
+									"    \"batchId\",",
+									"    \"classNo\",",
+									"    \"classDate\",",
+									"    \"classTopic\",",
+									"    \"classStatus\",",
+									"    \"classStaffId\",",
+									"    \"classDescription\",",
+									"    \"classComments\",",
+									"    \"classNotes\",",
+									"    \"classRecordingPath\",",
+									"    \"batchName\",",
+									"    \"classScheduledDates\"",
+									"  ]",
+									"}",
+									"",
+									"// Get the status code of the response",
+									"var StatusCode = pm.response.code;",
+									"if(StatusCode === 200){",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    //calling jsonSchemaValidation methods",
+									"    eval(pm.environment.get(\"jsonSchemaValidation\"))();",
+									"",
+									"    //Data Type Validation",
+									"    pm.test(\"Validating Test Data Type Of the Response\", () => {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData.csId).to.be.a(\"number\");",
+									"    pm.expect(jsonData.batchId).to.be.a(\"number\");",
+									"    pm.expect(jsonData.classDate).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classTopic).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classStatus).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classStaffId).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classScheduledDates).to.be.an(\"array\");",
+									"",
+									"        // // Validate classScheduledDates",
+									"        // pm.expect(typeof jsonData.classScheduledDates).to.eql(\"object\" || \"null\", \"Expected 'classScheduledDates' to be a object\");",
+									"     });",
+									"",
+									"    pm.test(\"Validating ClassID\", () => {",
+									"        pm.expect(jsonData.csId).to.equal(pm.collectionVariables.get(\"classid_cl\"));",
+									"    });",
+									"",
+									"    ",
+									"    }",
+									"   ",
+									"",
+									"",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ba21a678-66a8-4e3b-9ee7-80dce660ae71",
+								"exec": [
+									"pm.request.headers.add({",
+									"    key: \"Content-Type\",",
+									"    value: pm.variables.get(\"contentType\")",
+									"});",
+									"pm.variables.set(\"classScheduledDates\", JSON.stringify(pm.variables.get(\"class_scheduled_dates\")));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "dbd6d162-2dc4-4f9f-8656-906aa0f27d12",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"batchId\": {{batch_Id}},\n  \"classDate\": \"{{class_date}}\",\n  \"classDescription\": \"{{class_desc}}\",\n  \"classNo\": {{class_no}},\n  \"classStatus\": \"{{class_status}}\",\n   \"classStaffId\": \"{{class_staffId}}\",\n  \"classTopic\": \"{{class_topic}}\",\n\"classScheduledDates\": {{classScheduledDates}}\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Class Recording path",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "af0e36de-b8ad-4a1b-9045-6793ae524715",
+								"exec": [
+									"if(pm.variables.get(\"statusCode\")===200){",
+									"",
+									"",
+									" //-------------SCHEMA VALIDATION---------------",
+									"",
+									"",
+									"",
+									" var expectedSchema = {",
+									"  \"type\": \"object\",",
+									"  \"properties\": {",
+									"    \"csId\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"batchId\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"classNo\": {",
+									"      \"type\": \"integer\"",
+									"    },",
+									"    \"classDate\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classTopic\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classStatus\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classStaffId\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classDescription\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classComments\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classNotes\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classRecordingPath\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"batchName\": {",
+									"      \"type\": \"string\"",
+									"    },",
+									"    \"classScheduledDates\": {",
+									"      \"type\": \"array\",",
+									"      \"items\": [",
+									"        {",
+									"          \"type\": \"string\"",
+									"        }",
+									"      ]",
+									"    }",
+									"  },",
+									"  \"required\": [",
+									"    \"csId\",",
+									"    \"batchId\",",
+									"    \"classNo\",",
+									"    \"classDate\",",
+									"    \"classTopic\",",
+									"    \"classStatus\",",
+									"    \"classStaffId\",",
+									"    \"classDescription\",",
+									"    \"classComments\",",
+									"    \"classNotes\",",
+									"    \"classRecordingPath\",",
+									"    \"batchName\",",
+									"    \"classScheduledDates\"",
+									"  ]",
+									"}",
+									"",
+									"// Get the status code of the response",
+									"var StatusCode = pm.response.code;",
+									"if(StatusCode === 200){",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    //calling jsonSchemaValidation methods",
+									"    eval(pm.environment.get(\"jsonSchemaValidation\"))();",
+									"",
+									"    //Data Type Validation",
+									"    pm.test(\"Validating Test Data Type Of the Response\", () => {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"    pm.expect(jsonData.csId).to.be.a(\"number\");",
+									"    pm.expect(jsonData.batchId).to.be.a(\"number\");",
+									"    pm.expect(jsonData.classDate).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classTopic).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classStatus).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classStaffId).to.be.a(\"string\");",
+									"    pm.expect(jsonData.classScheduledDates).to.be.an(\"array\");",
+									"    pm.expect(jsonData.classRecordingPath).to.be.an(\"string\");",
+									"",
+									"    });",
+									"",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "b775397a-5e4e-4852-9fb1-b446fde70344",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"classRecordingPath\" : \"{{recordingPath}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				}
+			],
+			"id": "80d958c4-bee0-4899-8aab-5eead6a593d3"
+		},
+		{
+			"name": "Delete and Data Cleanup",
+			"item": [
+				{
+					"name": "Delete class by Class Id",
+					"id": "90437e82-ab85-404c-b005-21e43f86ec25",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"id": "94f0ae0c-ddf7-47ad-9ba4-fd9851d4057e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseURL}}/users/{{userId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Batch by BatchID",
+					"id": "7afaeed7-64ba-4413-bdeb-9426c06b19d6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Program by ProgramName",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f58792e7-9f1f-4ed1-88c1-cdf894946af7",
+								"exec": [
+									"pm.request.headers.add({\r",
+									"    key: \"Content-Type\",\r",
+									"    value: pm.variables.get(\"contentType\")\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"// let storedProgramName = pm.collectionVariables.get(\"programName\");\r",
+									"\r",
+									"// if (!storedProgramName) {\r",
+									"//     console.log(\"⚠️ No stored programName, skipping DELETE request.\");\r",
+									"//     postman.setNextRequest(null); // Skip request if no program name\r",
+									"// }\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5aa15a09-6b3e-4e36-b511-34d24b2b3a9e",
+								"exec": [
+									"// var responseBody;\r",
+									"// try {\r",
+									"//     responseBody = pm.response.text(); // Get response as plain text\r",
+									"// } catch (e) {\r",
+									"//     responseBody = \"\";\r",
+									"// }\r",
+									"\r",
+									"// // ✅ Validate Status Code (Handles Both Positive & Negative Scenarios)\r",
+									"// pm.test(\"Validate Status Code\", function () {\r",
+									"//     pm.expect(pm.response.code).to.be.oneOf([200, 400, 401, 404, 405]);\r",
+									"// });\r",
+									"\r",
+									"// // ✅ Validate Status Line (Based on Response Code)\r",
+									"// pm.test(\"Validate Status Line\", function () {\r",
+									"//     const expectedStatus = {\r",
+									"//         200: \"OK\",\r",
+									"//         400: \"Bad Request\",\r",
+									"//         401: \"Unauthorized\",\r",
+									"//         404: \"Not Found\",\r",
+									"//         405: \"Method Not Allowed\"\r",
+									"//     };\r",
+									"//     pm.expect(pm.response.status).to.eql(expectedStatus[pm.response.code]);\r",
+									"// });\r",
+									"\r",
+									"// // ✅ Validate Response Headers (Check if Content-Type is plain text)\r",
+									"// pm.test(\"Response has Content-Type as plain text\", function () {\r",
+									"//     pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"text/plain\");\r",
+									"// });\r",
+									"\r",
+									"// // ✅ Handle Successful Deletion (200 OK)\r",
+									"// if (pm.response.code === 200) {\r",
+									"//     pm.test(\"Response contains deletion confirmation message\", function () {\r",
+									"//         pm.expect(responseBody).to.include(\"deleted Successfully!\");\r",
+									"//     });\r",
+									"\r",
+									"//     // ✅ Validate Response Schema for Success\r",
+									"//     pm.test(\"Response schema is valid (Success)\", function () {\r",
+									"//         let regexPattern = /^Message: Program Name -[\\w-]+ is deleted Successfully!$/; \r",
+									"//         pm.expect(responseBody).to.match(regexPattern);\r",
+									"//     });\r",
+									"\r",
+									"//     // ✅ Store Deletion Status in Collection Variable\r",
+									"//     console.log(\"✅ Program deleted successfully!\");\r",
+									"//     pm.collectionVariables.set(\"programDeleted\", true);\r",
+									"\r",
+									"// } else {\r",
+									"//     // ✅ Handle Unauthorized Cases (401)\r",
+									"//     if (pm.response.code === 401) {\r",
+									"//         pm.test(\"Unauthorized response message validation\", function () {\r",
+									"//             pm.expect(responseBody).to.include(\"Unauthorized\");\r",
+									"//         });\r",
+									"//     }\r",
+									"\r",
+									"//     // ✅ Handle Not Found Cases (404)\r",
+									"//     if (pm.response.code === 404) {\r",
+									"//         pm.test(\"Program not found message validation\", function () {\r",
+									"//             pm.expect(responseBody).to.include(\"Not Found\");\r",
+									"//         });\r",
+									"//     }\r",
+									"\r",
+									"//     // ✅ Handle Invalid Request Method (405)\r",
+									"//     if (pm.response.code === 405) {\r",
+									"//         pm.test(\"Method Not Allowed message validation\", function () {\r",
+									"//             pm.expect(responseBody).to.include(\"Method Not Allowed\");\r",
+									"//         });\r",
+									"//     }\r",
+									"\r",
+									"//     // ✅ Store Deletion Failure Status in Collection Variable\r",
+									"//     console.log(\"⚠️ Program deletion may have failed.\");\r",
+									"//     pm.collectionVariables.set(\"programDeleted\", false);\r",
+									"// }\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "95dcd539-ffd8-4b8a-a6b6-46da2dc21791",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Program by ProgramID",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "905e294d-c2cc-4e8c-8a59-d95d4015930b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "940abf26-4191-4f11-ac0b-22e7714efa35",
+								"exec": [
+									"// ✅ Retrieve stored programId from collection variables\r",
+									"let storedProgramId = pm.collectionVariables.get(\"programId\");\r",
+									"\r",
+									"// ✅ Handle case when program is already deleted\r",
+									"if (pm.collectionVariables.get(\"programDeleted\") === \"true\") {\r",
+									"    console.log(\"⚠️ Program already deleted, skipping DELETE request.\");\r",
+									"    postman.setNextRequest(null); // Skip request\r",
+									"} \r",
+									"// ✅ Handle case when no stored programId exists\r",
+									"else if (!storedProgramId) {\r",
+									"    console.log(\"⚠️ No stored programId found, skipping DELETE request.\");\r",
+									"    postman.setNextRequest(null); // Skip request\r",
+									"} \r",
+									"// ✅ Proceed with DELETE request if programId exists\r",
+									"else {\r",
+									"    console.log(\"✅ ProgramId found:\", storedProgramId);\r",
+									"}\r",
+									"\r",
+									"var responseText = \"\";\r",
+									"var jsonData = {};\r",
+									"\r",
+									"// ✅ Attempt to parse response\r",
+									"try {\r",
+									"    responseText = pm.response.text(); // Get response as plain text\r",
+									"    jsonData = pm.response.json(); // Parse JSON if available\r",
+									"} catch (e) {\r",
+									"    console.warn(\"⚠️ Response could not be parsed as JSON. Defaulting to empty object.\");\r",
+									"}\r",
+									"\r",
+									"// ✅ Validate Status Code (Handles All Scenarios)\r",
+									"pm.test(\"Validate Status Code\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 401, 404, 405]);\r",
+									"});\r",
+									"\r",
+									"// ✅ Validate Status Line (Based on Response Code)\r",
+									"pm.test(\"Validate Status Line\", function () {\r",
+									"    const expectedStatus = {\r",
+									"        200: \"OK\",\r",
+									"        401: \"Unauthorized\",\r",
+									"        404: \"Not Found\",\r",
+									"        405: \"Method Not Allowed\"\r",
+									"    };\r",
+									"\r",
+									"    let actualStatus = pm.response.status;\r",
+									"    \r",
+									"    if (expectedStatus[pm.response.code]) {\r",
+									"        pm.expect(actualStatus).to.eql(expectedStatus[pm.response.code]);\r",
+									"    } else {\r",
+									"        console.warn(`⚠️ Unexpected status line: ${actualStatus}`);\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"// ✅ Validate Response Headers (Check for Expected Content-Type)\r",
+									"pm.test(\"Response has valid Content-Type\", function () {\r",
+									"    let validContentTypes = [\"application/json\", \"text/plain\"];\r",
+									"    let responseContentType = pm.response.headers.get(\"Content-Type\") || \"\";\r",
+									"\r",
+									"    pm.expect(responseContentType).to.include.oneOf(validContentTypes);\r",
+									"});\r",
+									"\r",
+									"// ✅ Handle Unauthorized Cases (401)\r",
+									"if (pm.response.code === 401) {\r",
+									"    pm.test(\"Unauthorized response validation\", function () {\r",
+									"        pm.expect(responseText).to.include.oneOf([\"Unauthorized\", \"Invalid token\", \"Token expired\"]);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"// ✅ Handle Not Found Cases (404) (🔹 Fix Applied Here)\r",
+									"if (pm.response.code === 404) {\r",
+									"    pm.test(\"Invalid Program ID - Not Found\", function () {\r",
+									"        let expectedMessages = [\r",
+									"            \"Not Found\",\r",
+									"            \"No active program with the program Id\"\r",
+									"        ];\r",
+									"\r",
+									"        if (jsonData.hasOwnProperty(\"message\")) {\r",
+									"            pm.expect(jsonData.message).to.include.oneOf(expectedMessages);\r",
+									"        } else {\r",
+									"            console.warn(\"⚠️ Response does not contain a 'message' field.\");\r",
+									"            pm.expect(responseText).to.include.oneOf(expectedMessages);\r",
+									"        }\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"// ✅ Handle Invalid Request Method (405)\r",
+									"if (pm.response.code === 405) {\r",
+									"    pm.test(\"Method Not Allowed validation\", function () {\r",
+									"        pm.expect(responseText).to.include(\"Method Not Allowed\");\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"// ✅ Handle Successful Deletion\r",
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Response confirms successful deletion\", function () {\r",
+									"        pm.expect(responseText).to.include(\"deleted Successfully\");\r",
+									"    });\r",
+									"\r",
+									"    // ✅ Mark Program as Deleted\r",
+									"    pm.collectionVariables.set(\"programDeleted\", \"true\");\r",
+									"    console.log(\"✅ Program successfully deleted!\");\r",
+									"} else {\r",
+									"    console.warn(\"⚠️ Delete request failed. Response:\", responseText);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "838347bc-abd1-48f7-8518-e3c78c0d5fb8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				}
+			],
+			"id": "6f19ce5c-365d-4b48-9cc1-7a985da1f527"
+		},
+		{
+			"name": "Logout",
+			"item": [
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "58c3eb7a-195e-471b-a5cb-bae5aad5be84",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "017f95f2-3eff-4e92-92e9-a44fc558f594",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "e7cfab40-58b2-457b-92c6-aefcebb9ac1f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseURL}}{{Endpoint}}"
+					},
+					"response": []
+				}
+			],
+			"id": "b575c082-c22a-4d98-ac6c-b65860d287af"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{authToken}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "79b4f68a-6a8a-403b-be21-4554a431591c",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"//--------------Fetch Data from External JSON Data file-----------------",
+					"if (typeof pm.variables.get('requestdata') !== 'object') {",
+					"    pm.variables.set('requestdata', pm.iterationData.toObject());",
+					"}",
+					"const requestdata = pm.variables.get('requestdata');",
+					"",
+					"if(typeof requestdata !== 'object' || Object.keys(requestdata).length ===0) {",
+					"    console.log(\"No external file found\")",
+					"    return;",
+					"}",
+					"",
+					"const currentrequest = requestdata.requests.filter(({name}) => name === pm.info.requestName) [0];",
+					"if(!currentrequest){",
+					"    console.log(`Request ${pm.info.requestName} has no data defined.`);",
+					"}",
+					"",
+					"const variables = currentrequest.data.shift();",
+					"",
+					"Object.entries(variables).forEach(([key, value]) => {",
+					"        pm.variables.set(key, value);",
+					"    });",
+					"",
+					"pm.variables.set('requestdata',requestdata);",
+					"if(currentrequest.data.length > 0){",
+					"    pm.execution.setNextRequest(pm.info.requestName)",
+					"}",
+					"",
+					"//  pm.variables.set('requestdata',requestdata);",
+					"// if(currentrequest.data.length > 0){",
+					"//     postman.setNextRequest(pm.info.requestName)",
+					"// }",
+					"",
+					"//------------------ Authorization Set Up-----------------",
+					"pm.request.headers.clear(); // Clear all headers to prevent residual values",
+					"var AuthType = pm.variables.get(\"authType\");",
+					"switch (AuthType) {",
+					"    case \"No Auth\":",
+					"        pm.request.auth = { type: 'noauth' };",
+					"        break;",
+					"    case \"Bearer Token\":",
+					"        const authToken = pm.environment.get(\"AuthToken\");",
+					"        if (authToken) {",
+					"            pm.request.headers.add({ key: \"Authorization\", value: `Bearer ${authToken}` });}",
+					"         else {console.log(\"AuthToken is not set in the environment.\");}",
+					"        break;",
+					"    case \"Invalid Bearer token\":",
+					"        pm.request.headers.add({ key: \"Authorization\", value: \"invalid\" });",
+					"         console.log(\"Using invalid bearer token.\");",
+					"        break;",
+					"    default:",
+					"        console.log(\"Unknown authType: \" + AuthType); break;",
+					"}",
+					"",
+					"//-------------- Set the Request Method Dynamically---------------",
+					" if (variables.method) {",
+					"    pm.request.method = variables.method;",
+					" }",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0a337243-1a29-4c72-a90b-1bd57df2511f",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"var commonTests = () =>{",
+					"pm.test(\"Validating Status Code\", ()=> {",
+					"    pm.expect(pm.response.code).to.eql(pm.variables.get(\"statusCode\"));",
+					"});",
+					"",
+					"pm.test(\"Response status text check\", function () {",
+					"    pm.expect(pm.response.status).to.eql(pm.variables.get('statusText'));",
+					"});",
+					"",
+					"pm.test(\"Content-Type header is application/json\", ()=>{",
+					"    pm.response.to.have.header(\"Content-Type\");",
+					"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+					"});",
+					"",
+					"pm.test(\"Response time is less than 1000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+					"});",
+					"",
+					"}",
+					"",
+					"pm.environment.set(\"commonTests\",commonTests.toString());",
+					"",
+					"var jsonSchemaValidation = () =>{",
+					"    pm.test(\"Verify JSON Schema using AJV\", function () {",
+					"        pm.response.to.have.jsonSchema(expectedSchema);",
+					"    });",
+					"}",
+					"",
+					"pm.environment.set(\"jsonSchemaValidation\",jsonSchemaValidation.toString());",
+					"",
+					"//-----------Common Test/ Status Code Test Methods--------",
+					"if (pm.response.text() !== '') {",
+					"    try {",
+					"        const jsonData = pm.response.json();",
+					"        // Run common tests",
+					"        eval(pm.environment.get(\"commonTests\"))();",
+					"    } catch (e) {",
+					"       console.log(\"Failed to parse JSON response:\", e);",
+					"        // If the response is not valid JSON, only validate status and status text",
+					"        pm.test(\"Validating Status Code - \" , () => {",
+					"            pm.expect(pm.response.code).to.eql(pm.variables.get(\"statusCode\"));",
+					"        });",
+					"        pm.test(\"Response status text check - \" , function () {",
+					"            pm.expect(pm.response.status).to.eql(pm.variables.get('statusText'));",
+					"        });",
+					"    }",
+					"  } else {",
+					" console.log(\"Empty response received.\");",
+					"    pm.test(\"Validating Status Code - \"  , () => {",
+					"        pm.expect(pm.response.code).to.eql(pm.variables.get(\"statusCode\"));",
+					"    });",
+					"  }",
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "batchid_cl",
+			"value": "9155",
+			"type": "string"
+		},
+		{
+			"key": "classid_cl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "classTopic_cl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "validStaffID_cl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "inactiveBatchId_cl",
+			"value": "9126",
+			"type": "string"
+		},
+		{
+			"key": "invalidBatchId_cl",
+			"value": "12345",
+			"type": "string"
+		},
+		{
+			"key": "invalidClassId_cl",
+			"value": "70000",
+			"type": "string"
+		},
+		{
+			"key": "validStudentId_cl",
+			"value": "U44",
+			"type": "string"
+		},
+		{
+			"key": "programId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "oldProgramName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "programDeleted",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "program_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "batchName_cl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "roleId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userRoleMaps",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "programIdtoDelete",
+			"value": "16240",
+			"type": "string"
+		},
+		{
+			"key": "AdminID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "StaffID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "StudentId",
+			"value": ""
+		},
+		{
+			"key": "invaliduserId",
+			"value": "X1",
+			"type": "string"
+		}
+	]
+}
